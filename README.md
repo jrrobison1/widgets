@@ -1,14 +1,11 @@
 # Widgets API
 
-A CRUD REST API for managing Widgets built with FastAPI and SQLite.
+A CRUD REST API for managing Widgets.
 
 ## Features
 
 - Create, read, update, and delete widgets
-- Widget properties: name (max 64 chars), number of parts, created date, updated date
-- Automatic timestamp management
-- SQLite database persistence
-- Interactive API documentation
+- A Widget consists of: name (max 64 chars), number of parts, created date, updated date
 
 ## Prerequisites
 
@@ -63,7 +60,7 @@ curl -X POST "http://localhost:8000/widgets" \
 curl -X GET "http://localhost:8000/widgets"
 ```
 
-### Get a specific widget:
+### Retrieve widget by id:
 ```bash
 curl -X GET "http://localhost:8000/widgets/1"
 ```
@@ -116,16 +113,3 @@ poetry run pytest -v
 ## Database
 
 The application uses SQLite with a local database file (`widgets.db`) that will be created automatically when you first run the application.
-
-## Development
-
-The project follows a layered architecture:
-- **Controllers** (`src/widgets/main.py`): HTTP request/response handling
-- **Services** (`src/widgets/services.py`): Business logic and data conversion
-- **Models** (`src/widgets/models.py`): Database models and configuration
-- **Schemas** (`src/widgets/schemas.py`): API request/response models
-
-To run the application in development mode with auto-reload:
-```bash
-poetry run uvicorn src.widgets.main:app --reload --host 0.0.0.0 --port 8000
-```
