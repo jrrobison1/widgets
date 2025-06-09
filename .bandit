@@ -1,0 +1,14 @@
+# Bandit configuration for widgets project
+# Configuration file format: YAML
+
+# Skip these test IDs
+skips: ['B101']
+
+# Exclude directories
+exclude_dirs: ['tests', '.git', '__pycache__']
+
+# Confidence level (HIGH, MEDIUM, LOW)
+confidence: HIGH
+
+# Severity level (HIGH, MEDIUM, LOW)  
+level: MEDIUM 
