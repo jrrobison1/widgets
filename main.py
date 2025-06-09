@@ -1,43 +1,12 @@
 from fastapi import FastAPI, HTTPException, Depends
-from pydantic import BaseModel, Field, ConfigDict
-from datetime import datetime
-from typing import Optional, List
-from sqlalchemy import create_engine, Column, Integer, String, DateTime
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.orm import Session
+from typing import List
 
-SQLITE_DATABASE_URL = "sqlite:///./widgets.db"
-engine = create_engine(SQLITE_DATABASE_URL, connect_args={"check_same_thread": False})
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-Base = declarative_base()
-
-# DB Widget
-class WidgetDB(Base):
-    __tablename__ = "widgets"
-    
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(64), nullable=False)
-    number_of_parts = Column(Integer, nullable=False)
-    created_date = Column(DateTime, nullable=False)
-    updated_date = Column(DateTime, nullable=False)
-
-Base.metadata.create_all(bind=engine)
+from models import SessionLocal
+from schemas import Widget, WidgetResponse
+from services import widget_service
 
 app = FastAPI(title="Widgets API", description="A CRUD REST API for managing Widgets")
-
-# API models
-class Widget(BaseModel):
-    name: str = Field(..., max_length=64, description="UTF8 string, limited to 64 chars")
-    number_of_parts: int = Field(..., description="Integer, Number of parts in the widget")
-
-class WidgetResponse(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
-    
-    id: int
-    name: str
-    number_of_parts: int
-    created_date: datetime
-    updated_date: datetime
 
 # Database dependency
 def get_db():
@@ -47,64 +16,36 @@ def get_db():
     finally:
         db.close()
 
-@app.get("/widgets")
+@app.get("/widgets", response_model=List[WidgetResponse])
 def list_widgets(db: Session = Depends(get_db)):
     """List all widgets"""
-    widgets = db.query(WidgetDB).all()
-    
-    return [WidgetResponse.model_validate(widget) for widget in widgets]
+    return widget_service.get_all_widgets(db)
 
-@app.post("/widgets")
+@app.post("/widgets", response_model=WidgetResponse)
 def create_widget(widget: Widget, db: Session = Depends(get_db)):
     """Create a new widget"""
-    now = datetime.now()
-    
-    db_widget = WidgetDB(
-        name=widget.name,
-        number_of_parts=widget.number_of_parts,
-        created_date=now,
-        updated_date=now
-    )
-    
-    db.add(db_widget)
-    db.commit()
-    db.refresh(db_widget)
-    
-    return WidgetResponse.model_validate(db_widget)
+    return widget_service.create_widget(db, widget)
 
-@app.put("/widgets/{widget_id}")
+@app.put("/widgets/{widget_id}", response_model=WidgetResponse)
 def update_widget(widget_id: int, widget: Widget, db: Session = Depends(get_db)):
     """Update an existing widget"""
-    db_widget = db.query(WidgetDB).filter(WidgetDB.id == widget_id).first()
-    if not db_widget:
+    updated_widget = widget_service.update_widget(db, widget_id, widget)
+    if not updated_widget:
         raise HTTPException(status_code=404, detail="Widget not found")
-    
-    db_widget.name = widget.name
-    db_widget.number_of_parts = widget.number_of_parts
-    db_widget.updated_date = datetime.now()
-    
-    db.commit()
-    db.refresh(db_widget)
-    
-    return WidgetResponse.model_validate(db_widget)
+    return updated_widget
 
-@app.get("/widgets/{widget_id}")
+@app.get("/widgets/{widget_id}", response_model=WidgetResponse)
 def get_widget(widget_id: int, db: Session = Depends(get_db)):
     """Retrieve a widget by ID"""
-    db_widget = db.query(WidgetDB).filter(WidgetDB.id == widget_id).first()
-    if not db_widget:
+    widget = widget_service.get_widget_by_id(db, widget_id)
+    if not widget:
         raise HTTPException(status_code=404, detail="Widget not found")
-    
-    return WidgetResponse.model_validate(db_widget)
+    return widget
 
 @app.delete("/widgets/{widget_id}")
 def delete_widget(widget_id: int, db: Session = Depends(get_db)):
     """Delete a widget by ID"""
-    db_widget = db.query(WidgetDB).filter(WidgetDB.id == widget_id).first()
-    if not db_widget:
+    deleted = widget_service.delete_widget(db, widget_id)
+    if not deleted:
         raise HTTPException(status_code=404, detail="Widget not found")
-    
-    db.delete(db_widget)
-    db.commit()
-    
     return {"message": f"Widget {widget_id} deleted"} 
