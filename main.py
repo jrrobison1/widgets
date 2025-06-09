@@ -35,3 +35,21 @@ def update_widget(widget_id: int, widget: Widget):
     widget.updated_date = datetime.now()
     
     return {"message": f"Widget {widget_id} updated", "widget": widget} 
+
+@app.get("/widgets/{widget_id}")
+def get_widget(widget_id: int):
+    """Retrieve a widget by ID"""
+    
+    mock_widget = Widget(
+        name=f"Widget {widget_id}",
+        number_of_parts=5,
+        created_date=datetime.now(),
+        updated_date=datetime.now()
+    )
+    return {"widget": mock_widget}
+
+
+@app.delete("/widgets/{widget_id}")
+def delete_widget(widget_id: int):
+    """Delete a widget by ID"""
+    return {"message": f"Widget {widget_id} deleted"} 
