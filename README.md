@@ -48,7 +48,7 @@ The application can be configured using environment variables:
 poetry run python app.py
 # or
 HOST=127.0.0.1 PORT=8000 poetry run python app.py
-
+```
 
 **The API will be available at:**
 - http://localhost:8000
