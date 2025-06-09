@@ -9,7 +9,7 @@ class WidgetService:
     """Service layer for widget business logic and data conversion"""
     
     def _get_db(self) -> Session:
-        """Get database session"""
+        """Internal method to get database session"""
         return SessionLocal()
     
     def get_all_widgets(self) -> List[WidgetResponse]:
