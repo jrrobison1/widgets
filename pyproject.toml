@@ -1,17 +1,17 @@
-[project]
+[tool.poetry]
 name = "widgets"
 version = "0.1.0"
-description = ""
-authors = [
-    {name = "Jason Robison"}
-]
-license = {text = "MIT"}
+description = "A CRUD REST API for managing Widgets"
+authors = ["Jason Robison"]
+license = "MIT"
 readme = "README.md"
-requires-python = ">=3.13"
-dependencies = [
-]
 
+[tool.poetry.dependencies]
+python = "^3.8"
+fastapi = "^0.104.1"
+
+[tool.poetry.group.dev.dependencies]
 
 [build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
+requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
