@@ -43,18 +43,13 @@ The application can be configured using environment variables:
 
 ### Examples:
 
-**Development (default - localhost only):**
+**Running the app:**
 ```bash
-python app.py
+poetry run python app.py
 # or
 HOST=127.0.0.1 PORT=8000 python app.py
 ```
 ## Running the Application
-
-### Option 1: Using the app.py entry point (recommended)
-```bash
-python app.py
-```
 
 ### Option 2: Using uvicorn directly
 ```bash
