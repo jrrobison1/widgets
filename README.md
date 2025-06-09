@@ -6,6 +6,14 @@ A CRUD REST API for managing Widgets.
 
 - Create, read, update, and delete widgets
 - A Widget consists of: name (max 64 chars), number of parts, created date, updated date
+- The project:
+  - Includes unit test coverage
+  - Includes a generation script for OpenAPI spec
+  - Is PEP8 compliant
+  - Passes standard linter tests
+  - Passes Bandit security analysis
+  - Uses Python type annotations
+
 
 ## Prerequisites
 
@@ -24,17 +32,38 @@ A CRUD REST API for managing Widgets.
    poetry install
    ```
 
+## Configuration
+
+The application can be configured using environment variables:
+
+| Variable | Description | Default Value |
+|----------|-------------|---------------|
+| `HOST` | The host address to bind the server to | `127.0.0.1` (localhost) |
+| `PORT` | The port number to run the server on | `8000` |
+
+### Examples:
+
+**Development (default - localhost only):**
+```bash
+python app.py
+# or
+HOST=127.0.0.1 PORT=8000 python app.py
+```
 ## Running the Application
 
-1. **Start the server:**
-   ```bash
-   poetry run uvicorn src.widgets.main:app --reload --port 8000
-   ```
+### Option 1: Using the app.py entry point (recommended)
+```bash
+python app.py
+```
 
-2. **The API will be available at:**
-   - Main API: http://localhost:8000
-   - Interactive docs (Swagger UI): http://localhost:8000/docs
-   - Alternative docs (ReDoc): http://localhost:8000/redoc
+### Option 2: Using uvicorn directly
+```bash
+poetry run uvicorn src.widgets.main:app --reload --port 8000
+```
+
+**The API will be available at:**
+- http://localhost:8000
+
 
 ## API Endpoints
 
@@ -97,6 +126,7 @@ curl -X DELETE "http://localhost:8000/widgets/1"
   "updated_date": "datetime"
 }
 ```
+
 
 ## Running Tests
 
