@@ -5,14 +5,22 @@ description = "A CRUD REST API for managing Widgets"
 authors = ["Jason Robison"]
 license = "MIT"
 readme = "README.md"
+packages = [{ include = "widgets", from = "src" }]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.9"
 fastapi = "^0.104.1"
 uvicorn = "^0.24.0"
 sqlalchemy = "^2.0.41"
 
 [tool.poetry.group.dev.dependencies]
+pytest = "^8.4.0"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
