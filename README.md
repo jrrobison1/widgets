@@ -47,14 +47,8 @@ The application can be configured using environment variables:
 ```bash
 poetry run python app.py
 # or
-HOST=127.0.0.1 PORT=8000 python app.py
-```
-## Running the Application
+HOST=127.0.0.1 PORT=8000 poetry run python app.py
 
-### Option 2: Using uvicorn directly
-```bash
-poetry run uvicorn src.widgets.main:app --reload --port 8000
-```
 
 **The API will be available at:**
 - http://localhost:8000
